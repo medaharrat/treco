@@ -3,7 +3,17 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "AI Footprint - a privacy-first browser extension that tracks AI usage and estimates its environmental footprint",
+  "description": "Treco - a free, open-source, privacy-first browser extension that tracks AI usage and estimates its environmental footprint",
+  "license": "MIT",
+  "author": "Mohamed Aharrat",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/medaharrat/treco.git"
+  },
+  "homepage": "https://github.com/medaharrat/treco#readme",
+  "bugs": {
+    "url": "https://github.com/medaharrat/treco/issues"
+  },
   "workspaces": [
     "packages/core",
     "packages/extension"
@@ -26,5 +36,9 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "allowScripts": {
+    "esbuild@0.21.5": true,
+    "fsevents@2.3.3": true
   }
 }

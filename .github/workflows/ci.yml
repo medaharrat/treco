@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Typecheck, lint, build, test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build (Chrome + Firefox targets)
+        run: |
+          npm run build
+          npm run build:firefox
+
+      - name: Test (includes the security/privacy invariant suite, against the build above)
+        run: npm test
+
+      - name: Upload extension build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: treco-extension-builds
+          path: |
+            packages/extension/dist/chrome
+            packages/extension/dist/firefox
+          retention-days: 14
