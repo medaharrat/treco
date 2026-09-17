@@ -29,17 +29,8 @@ const INTRO_STEPS: IntroStep[] = [
 
 const TOTAL_STEPS = INTRO_STEPS.length + 1;
 
-/** Short, visually distinct monograms for the integrations grid - several provider names share a first letter. */
+/** Fallback for the one provider with no verifiable brand mark available anywhere (see BrandIcons.tsx). */
 const PROVIDER_MONOGRAMS: Record<string, string> = {
-  chatgpt: "GPT",
-  claude: "CL",
-  gemini: "GM",
-  copilot: "CP",
-  deepseek: "DS",
-  perplexity: "PX",
-  grok: "GR",
-  mistral: "LC",
-  poe: "PO",
   characterai: "AI"
 };
 
