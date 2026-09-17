@@ -1,0 +1,30 @@
+{
+  "name": "ai-footprint",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "AI Footprint - a privacy-first browser extension that tracks AI usage and estimates its environmental footprint",
+  "workspaces": [
+    "packages/core",
+    "packages/extension"
+  ],
+  "scripts": {
+    "build": "npm run build -w @ai-footprint/core && npm run build -w @ai-footprint/extension",
+    "build:core": "npm run build -w @ai-footprint/core",
+    "build:extension": "npm run build -w @ai-footprint/extension",
+    "build:firefox": "npm run build:core && npm run build:firefox -w @ai-footprint/extension",
+    "dev": "npm run dev -w @ai-footprint/extension",
+    "test": "npm run test -w @ai-footprint/core && npm run test -w @ai-footprint/extension",
+    "typecheck": "npm run typecheck -w @ai-footprint/core && npm run typecheck -w @ai-footprint/extension",
+    "lint": "eslint packages --ext .ts,.tsx"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.15.0",
+    "@typescript-eslint/parser": "^8.15.0",
+    "eslint": "^9.15.0",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
