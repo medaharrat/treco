@@ -26,6 +26,25 @@ describe("resolveProfile", () => {
     const profile = resolveProfile("deepseek", "deepseek-reasoner");
     expect(profile).toBe(FALLBACK_PROFILES.reasoning);
   });
+
+  it("picks the agentic tier for deep research / agent-mode labels", () => {
+    expect(resolveProfile("chatgpt", "o3 deep research")).toBe(FALLBACK_PROFILES.agentic);
+    expect(resolveProfile("gemini", "Gemini 2.5 Pro (Deep Research)")).toBe(FALLBACK_PROFILES.agentic);
+    expect(resolveProfile("chatgpt", "ChatGPT Agent Mode")).toBe(FALLBACK_PROFILES.agentic);
+  });
+
+  it("prefers the agentic tier over reasoning when a model name matches both", () => {
+    // "o3 deep research" contains both an "o3" reasoning cue and a "deep research" cue;
+    // the heavier tier should win since it does strictly more unobserved work.
+    const profile = resolveProfile("chatgpt", "o3 deep research");
+    expect(profile).toBe(FALLBACK_PROFILES.agentic);
+    expect(profile).not.toBe(FALLBACK_PROFILES.reasoning);
+  });
+
+  it("never uses a disclosed provider profile for agentic-tier interactions", () => {
+    const profile = resolveProfile("chatgpt", "deep research");
+    expect(profile.isFallback).toBe(true);
+  });
 });
 
 describe("calculateFootprint", () => {

@@ -3,7 +3,7 @@ import type { ModelFootprintProfile } from "../types.js";
 /**
  * Model footprint profile database.
  *
- * Two kinds of entries live here:
+ * Three kinds of entries live here:
  *
  * 1. Disclosed, provider-published aggregate figures (OpenAI, Google) - the
  *    closest thing to "model-specific data" realistically available to a
@@ -12,20 +12,40 @@ import type { ModelFootprintProfile } from "../types.js";
  *    the same calculation engine as everything else. They are still
  *    estimates - the providers themselves have not published full
  *    methodologies - so confidence is capped at "medium", never "high".
+ *    Deliberately NOT tied to a specific model version name: providers ship
+ *    new flagship models faster than any browser extension can track, so
+ *    these profiles describe "whichever model a provider's disclosed figure
+ *    was actually measured against" and are re-reviewed periodically rather
+ *    than hardcoded to a version number that will be stale within months.
  *
  * 2. Fallback tiers, keyed by a rough model size/behavior class
- *    (small / medium / large / reasoning). These are used for every provider
- *    or model we do not have a credible public disclosure for. They are
- *    intentionally wide-banded and always marked isFallback: true and
+ *    (small / medium / large / reasoning / agentic). These are used for every
+ *    provider or model we do not have a credible public disclosure for. They
+ *    are intentionally wide-banded and always marked isFallback: true and
  *    confidence: "low".
  *
  * We deliberately do NOT hardcode a single universal Wh-per-token or
  * gCO2e-per-token constant anywhere in this codebase.
+ *
+ * Background sources for the order-of-magnitude assumptions below (grid
+ * intensity, PUE, WUE, and the general shape of LLM inference energy use)
+ * are listed in full on the in-app Methodology page and in
+ * docs/METHODOLOGY.md, with links.
  */
 
 const GLOBAL_AVG_CARBON_INTENSITY_G_PER_KWH = 442; // approx. global grid average, IEA-style order of magnitude
 const GLOBAL_AVG_WUE_ML_PER_KWH = 1800; // approx. data center site WUE industry average (Uptime Institute-style order of magnitude)
-const GLOBAL_AVG_PUE = 1.5; // approx. global data center PUE average
+const GLOBAL_AVG_PUE = 1.56; // Uptime Institute Global Data Center Survey 2024 industry-average PUE
+
+const BACKGROUND_RESEARCH_SOURCE = {
+  text: "Order-of-magnitude estimate consistent with published LLM inference energy research (see the Methodology page's 'Sources & further reading' for the full academic and industry citations); no model-specific disclosure exists for this model, so a generic size/behavior tier is used.",
+  url: undefined
+};
+
+const INDUSTRY_AVERAGES_SOURCE = {
+  text: "Global average PUE (Uptime Institute Global Data Center Survey 2024) and data center water usage effectiveness are industry-survey order-of-magnitude averages, not measurements of any specific facility.",
+  url: "https://uptimeinstitute.com/resources/research-and-reports/uptime-institute-global-data-center-survey-results-2024"
+};
 
 function fallbackTier(params: {
   id: string;
@@ -46,13 +66,8 @@ function fallbackTier(params: {
     uncertaintyRange: { lowerMultiplier: 0.4, upperMultiplier: 2.5 },
     confidence: "low",
     isFallback: true,
-    sources: [
-      "Order-of-magnitude estimate derived from publicly discussed LLM inference energy studies " +
-        "(e.g. academic life-cycle-assessment papers and industry sustainability reports); " +
-        "no model-specific disclosure exists for this model, so a generic size/behavior tier is used.",
-      "Global average PUE and data center water usage effectiveness figures are industry survey order-of-magnitude averages."
-    ],
-    lastUpdated: "2026-01-01",
+    sources: [BACKGROUND_RESEARCH_SOURCE, INDUSTRY_AVERAGES_SOURCE],
+    lastUpdated: "2026-09-17",
     methodologyNote: params.note
   };
 }
@@ -89,6 +104,19 @@ export const FALLBACK_PROFILES = {
       "Applied to models that generate substantial hidden chain-of-thought/reasoning tokens in addition to " +
       "the visible response, which the browser cannot observe directly. The higher coefficient is a coarse " +
       "attempt to account for that unobserved compute."
+  }),
+  agentic: fallbackTier({
+    id: "agentic",
+    label: "Deep research / multi-step agent mode (fallback tier)",
+    inputWhPerToken: 0.0006,
+    outputWhPerToken: 0.012,
+    note:
+      "Applied to 'deep research', 'agent mode', or similar multi-step tool-using features that run many " +
+      "internal searches, tool calls, and reasoning passes behind a single visible response. None of that " +
+      "internal work is observable from the page, so this is the widest, most uncertain tier - treat it as a " +
+      "lower bound rather than a precise figure. If a provider ever discloses per-task energy for these " +
+      "features specifically, that would replace this tier the same way OpenAI's and Google's disclosed " +
+      "per-query figures already replace it for ordinary chat."
   })
 } satisfies Record<string, ModelFootprintProfile>;
 
@@ -101,7 +129,7 @@ export const DISCLOSED_PROFILES: ModelFootprintProfile[] = [
   {
     id: "openai/chatgpt-default",
     provider: "chatgpt",
-    model: "gpt-4o / default ChatGPT model",
+    model: "ChatGPT's disclosed per-query average (default, non-reasoning model)",
     whPerRequest: 0.34,
     // pue = 1.0 because OpenAI's public figure is described as an all-in,
     // per-query energy estimate; applying an additional PUE would double-count.
@@ -112,20 +140,24 @@ export const DISCLOSED_PROFILES: ModelFootprintProfile[] = [
     confidence: "medium",
     isFallback: false,
     sources: [
-      "OpenAI public estimate of average energy/water per ChatGPT query (company blog post, 2025). " +
-        "OpenAI has not published a full methodology; treat as an approximate, provider-reported aggregate."
+      {
+        text: "Sam Altman, \"The Gentle Singularity\" (OpenAI CEO's personal blog, June 2025): \"the average query uses about 0.34 watt-hours... it also uses about 0.000085 gallons of water.\"",
+        url: "https://blog.samaltman.com/the-gentle-singularity"
+      }
     ],
-    lastUpdated: "2025-06-01",
+    lastUpdated: "2025-06-10",
     methodologyNote:
       "Uses OpenAI's own disclosed average per-query energy figure directly as whPerRequest (input/output token " +
       "weighting is not available at this granularity). Applies a generic US grid carbon intensity because OpenAI " +
-      "did not disclose one. Treated as covering ChatGPT's default consumer model; reasoning models (o1/o3) are not " +
-      "covered by this figure and fall back to the reasoning tier instead."
+      "did not disclose one. This figure is not tied to a specific named model version - OpenAI's disclosure " +
+      "describes 'an average query' on its consumer product, whichever model that resolves to at the time. It " +
+      "does not cover reasoning models or deep research / agent mode, which fall back to those tiers instead " +
+      "regardless of which underlying model is detected."
   },
   {
     id: "google/gemini-default",
     provider: "gemini",
-    model: "Gemini (default Gemini Apps model)",
+    model: "Gemini Apps' disclosed per-prompt median",
     whPerRequest: 0.24,
     pue: 1.0, // Google's figure is described as already reflecting fleet-wide, all-in energy use
     carbonIntensityGPerKwh: 125, // back-calculated from Google's disclosed ~0.03 gCO2e at 0.24 Wh
@@ -134,14 +166,21 @@ export const DISCLOSED_PROFILES: ModelFootprintProfile[] = [
     confidence: "medium",
     isFallback: false,
     sources: [
-      "Google, published technical report estimating the median energy, carbon and water footprint of a Gemini " +
-        "Apps text prompt (2025). Reflects Google's own fleet and clean-energy mix, which is well below grid average."
+      {
+        text: "Google, \"Measuring the environmental impact of AI inference\" (Aug 2025): the median Gemini Apps text prompt uses 0.24 Wh, 0.26 mL of water, and emits 0.03 g CO2e.",
+        url: "https://cloud.google.com/blog/products/infrastructure/measuring-the-environmental-impact-of-ai-inference"
+      },
+      {
+        text: "Full technical report (PDF): \"Measuring the environmental impact of delivering AI at Google scale.\"",
+        url: "https://services.google.com/fh/files/misc/measuring_the_environmental_impact_of_delivering_ai_at_google_scale.pdf"
+      }
     ],
-    lastUpdated: "2025-08-01",
+    lastUpdated: "2025-08-21",
     methodologyNote:
       "Uses Google's disclosed median per-prompt energy, carbon and water figures directly, back-calculated into " +
       "per-kWh coefficients so they fit this engine's shared calculation path. Longer or multimodal prompts " +
-      "(images, video, long context) are not separately modeled and will be understated by this profile."
+      "(images, video, long context) are not separately modeled and will be understated by this profile. Does not " +
+      "cover Gemini's reasoning/'thinking' modes or Deep Research, which fall back to those tiers instead."
   }
 ];
 

@@ -93,8 +93,8 @@ export interface ModelFootprintProfile {
   /** Multipliers applied to the central estimate to produce a low/high uncertainty band. */
   uncertaintyRange: { lowerMultiplier: number; upperMultiplier: number };
   confidence: Confidence;
-  /** Human-readable citations - descriptions, not links, of the basis for these numbers. */
-  sources: string[];
+  /** Human-readable citations for the basis of these numbers, each with a real, checkable link where one exists. */
+  sources: Array<{ text: string; url?: string }>;
   /** ISO date string for when this profile's figures were last reviewed. */
   lastUpdated: string;
   /** True when this is a generic fallback tier rather than model-specific data. */

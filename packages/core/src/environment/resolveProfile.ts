@@ -10,7 +10,11 @@ type Tier = keyof typeof FALLBACK_PROFILES;
  * magnitude.
  */
 const TIER_KEYWORDS: Array<{ tier: Tier; keywords: string[] }> = [
-  { tier: "reasoning", keywords: ["o1", "o3", "reasoner", "reasoning", "think"] },
+  // Checked first: multi-step tool-using modes do substantially more hidden
+  // work than a single reasoning pass, so a name matching both ("o3 deep
+  // research") should resolve to the heavier agentic tier, not reasoning.
+  { tier: "agentic", keywords: ["deep research", "deep-research", "research agent", "agent mode", "operator", "computer use"] },
+  { tier: "reasoning", keywords: ["o1", "o3", "o4", "reasoner", "reasoning", "extended thinking", "think"] },
   { tier: "small", keywords: ["mini", "flash", "haiku", "nano", "lite", "small"] },
   { tier: "large", keywords: ["opus", "ultra", "large", "pro-max", "405b"] }
 ];
@@ -37,10 +41,11 @@ export function resolveProfile(provider: string, model: string, lookup: ProfileL
 
   // Disclosed provider-level averages (e.g. OpenAI's/Google's published
   // per-query figures) describe that provider's default consumer model, not
-  // extended-reasoning variants that do substantial hidden chain-of-thought
-  // work. Those get the reasoning tier instead, even when a disclosed
-  // profile exists for the provider - see each profile's methodologyNote.
-  if (tier !== "reasoning") {
+  // extended-reasoning or multi-step agent/deep-research variants that do
+  // substantial hidden work. Those get their own tier instead, even when a
+  // disclosed profile exists for the provider - see each profile's
+  // methodologyNote.
+  if (tier !== "reasoning" && tier !== "agentic") {
     const candidates = [...(lookup.extraProfiles ?? []), ...DISCLOSED_PROFILES];
     const exact = candidates.find((p) => p.provider === provider);
     if (exact) return exact;
