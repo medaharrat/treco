@@ -1,8 +1,17 @@
-# AI Footprint
+# Treco — Sustainable AI Usage Tracking
 
-A privacy-first, cross-browser extension that helps you understand how much you use AI, and gives you a clearly-labeled
-**estimate** of the energy, CO2e and water associated with that usage — entirely on your device, with no account, no
-server, and no conversation content ever collected.
+[![License](https://img.shields.io/badge/license-unspecified-lightgrey)](#license)
+[![Node](https://img.shields.io/badge/node-%3E%3D18-339933?logo=node.js&logoColor=white)](#development)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](#development)
+[![Manifest V3](https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white)](#installing-in-a-browser)
+[![Privacy](https://img.shields.io/badge/privacy-local--only-2ea44f)](docs/PRIVACY.md)
+[![Providers](https://img.shields.io/badge/providers-10%20supported-orange)](#what-it-does)
+
+`ai` · `sustainability` · `browser-extension` · `privacy` · `carbon-footprint` · `chatgpt` · `claude` · `gemini` · `typescript` · `react`
+
+Treco is a privacy-first, cross-browser extension that helps you understand how much you use AI, and gives you a
+clearly-labeled **estimate** of the energy, CO2e and water associated with that usage — entirely on your device, with
+no account, no server, and no conversation content ever collected.
 
 > **Honesty first.** Every number this extension shows is an estimate, built from published research and
 > provider-disclosed figures where they exist, and clearly-labeled fallback tiers where they don't. Nothing is
@@ -32,7 +41,7 @@ Full detail: [`docs/PRIVACY.md`](docs/PRIVACY.md).
 ## Project structure
 
 ```
-ai-footprint/
+treco/
 ├── packages/
 │   ├── core/                 Shared, browser-agnostic TypeScript logic
 │   │   └── src/
