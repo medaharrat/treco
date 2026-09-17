@@ -952,3 +952,217 @@ a {
   margin-left: auto;
   color: var(--af-text-tertiary);
 }
+
+/* Onboarding: a calm, full-screen, Apple-style walkthrough - one idea per screen. */
+
+.af-onboarding {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 48px 24px;
+  background: var(--af-bg);
+}
+
+.af-onboarding-glow {
+  position: absolute;
+  width: 560px;
+  height: 560px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--af-sage-soft) 0%, transparent 68%);
+  top: -220px;
+  right: -180px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.af-onboarding-glow-2 {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--af-accent-soft) 0%, transparent 70%);
+  bottom: -200px;
+  left: -160px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.af-onboarding-content {
+  position: relative;
+  z-index: 1;
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.af-onboarding-icon {
+  width: 76px;
+  height: 76px;
+  border-radius: 24px;
+  background: linear-gradient(155deg, var(--af-leaf), var(--af-forest));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  margin-bottom: 28px;
+  box-shadow: var(--af-shadow-md);
+}
+
+.af-onboarding-eyebrow {
+  color: var(--af-accent-strong);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 10px;
+}
+
+:root[data-theme="dark"] .af-onboarding-eyebrow,
+:root:not([data-theme="light"]) .af-onboarding-eyebrow {
+  color: var(--af-accent);
+}
+
+.af-onboarding-title {
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin: 0 0 14px;
+  color: var(--af-text-primary);
+}
+
+.af-onboarding-body {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--af-text-secondary);
+  margin: 0 0 36px;
+}
+
+.af-onboarding-dots {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 30px;
+}
+
+.af-onboarding-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--af-border);
+  transition: width 0.2s ease, background 0.2s ease;
+}
+
+.af-onboarding-dot.active {
+  width: 22px;
+  background: var(--af-accent-strong);
+}
+
+:root[data-theme="dark"] .af-onboarding-dot.active,
+:root:not([data-theme="light"]) .af-onboarding-dot.active {
+  background: var(--af-accent);
+}
+
+.af-onboarding-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.af-onboarding-back {
+  background: none;
+  border: none;
+  color: var(--af-text-tertiary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.af-onboarding-back:hover {
+  color: var(--af-text-secondary);
+}
+
+/* Integrations grid (step 3): app-icon-style tiles instead of a plain toggle list. */
+
+.af-onboarding-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+.af-onboarding-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 12px 4px;
+  border-radius: 16px;
+  border: 1.5px solid var(--af-border);
+  background: var(--af-surface);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+}
+
+.af-onboarding-tile:hover {
+  transform: translateY(-1px);
+}
+
+.af-onboarding-tile.selected {
+  border-color: var(--af-accent);
+  background: var(--af-accent-soft);
+}
+
+.af-onboarding-tile-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 10.5px;
+  letter-spacing: 0.01em;
+  flex-shrink: 0;
+}
+
+.af-onboarding-tile-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--af-text-primary);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.af-onboarding-tile-check {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--af-accent-strong);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:root[data-theme="dark"] .af-onboarding-tile-check,
+:root:not([data-theme="light"]) .af-onboarding-tile-check {
+  background: var(--af-accent);
+}

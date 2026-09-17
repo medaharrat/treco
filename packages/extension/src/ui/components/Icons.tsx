@@ -22,7 +22,8 @@ export type IconName =
   | "file"
   | "arrowLeft"
   | "chevronRight"
-  | "external";
+  | "external"
+  | "check";
 
 interface IconProps {
   name: IconName;
@@ -140,7 +141,8 @@ const PATHS: Record<IconName, React.ReactNode> = {
       <path d="M19 5 9 15" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M14 5H6a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8" strokeLinecap="round" strokeLinejoin="round" />
     </>
-  )
+  ),
+  check: <path d="M5 12.5 9.5 17 19 7" strokeLinecap="round" strokeLinejoin="round" />
 };
 
 export function Icon({ name, size = 18, strokeWidth = 1.8, className }: IconProps) {
