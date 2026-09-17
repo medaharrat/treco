@@ -8,11 +8,13 @@ explains how to report a security issue, and what Treco's security model actuall
 If you find a security or privacy issue in Treco, please report it privately rather than opening a public GitHub
 issue, so users aren't exposed while a fix is prepared.
 
-- **Preferred:** email `[TODO: security contact email - not yet configured; a placeholder, not a real address]`.
-- **Until that exists:** open a GitHub issue at
-  [github.com/medaharrat/treco/issues](https://github.com/medaharrat/treco/issues) marked clearly as sensitive, or
-  use GitHub's [private vulnerability reporting](https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing/privately-reporting-a-security-vulnerability)
-  feature on the repository if it's enabled, so the report isn't immediately public.
+Treco has no dedicated security email - the project's public GitHub repository is the official channel:
+
+- **Preferred:** GitHub's [private vulnerability reporting](https://github.com/medaharrat/treco/security/advisories/new)
+  feature on the repository, so the report isn't immediately public.
+- **Alternative:** open a GitHub issue at
+  [github.com/medaharrat/treco/issues](https://github.com/medaharrat/treco/issues) marked clearly as sensitive if
+  private reporting isn't available to you.
 
 A good report includes:
 

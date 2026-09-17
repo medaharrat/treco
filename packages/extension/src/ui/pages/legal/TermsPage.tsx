@@ -2,18 +2,17 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { LegalLayout } from "../../components/LegalLayout.js";
 
-const TODO = ({ children }: { children: React.ReactNode }) => <span className="af-legal-todo">{children}</span>;
-
 export function TermsPage() {
   return (
     <LegalLayout title="Terms of Use" icon="file" lastUpdated="September 17, 2026">
       <p className="af-muted" style={{ marginTop: -8, fontSize: 12.5 }}>
-        Effective date: <TODO>[PLACEHOLDER: effective date, to be set at public release]</TODO>
+        Effective date: September 17, 2026
       </p>
       <p>
         These Terms of Use ("Terms") govern your use of Treco, a free, open-source browser extension. Treco is a
-        personal, non-commercial project developed and maintained by an individual developer - not a company. By
-        installing or using Treco, you agree to these Terms. If you don't agree, please don't use the extension.
+        personal, non-commercial project developed and maintained by an individual developer based in Hungary - not
+        a company, and not operated through any registered business entity. By installing or using Treco, you agree
+        to these Terms. If you don't agree, please don't use the extension.
       </p>
 
       <h2>1. Acceptance of terms</h2>
@@ -110,15 +109,14 @@ export function TermsPage() {
 
       <h2>12. Governing law</h2>
       <p>
-        A specific governing law or jurisdiction for these Terms has not been determined. This is left as an open item
-        rather than assumed from any particular location: <TODO>[TODO: governing law/jurisdiction - to be determined; not to be
-        assumed from the developer's residence]</TODO>. Nothing here should be read as selecting a jurisdiction until this
-        placeholder is resolved.
+        These Terms are governed by the laws of Hungary, without regard to its conflict-of-laws principles, unless a
+        different jurisdiction is required by applicable consumer-protection law where you live.
       </p>
 
       <h2>13. Contact</h2>
       <p>
-        See the <Link to="/legal/contact">Contact</Link> page for the current ways to reach the developer about these Terms.
+        See the <Link to="/legal/contact">Contact</Link> page for the current ways to reach the developer about these Terms -
+        the project's public GitHub repository is the primary channel.
       </p>
     </LegalLayout>
   );

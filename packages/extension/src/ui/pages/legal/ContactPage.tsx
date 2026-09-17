@@ -3,20 +3,18 @@ import { Link } from "react-router-dom";
 import { LegalLayout } from "../../components/LegalLayout.js";
 import { Icon } from "../../components/Icons.js";
 
-const TODO = ({ children }: { children: React.ReactNode }) => <span className="af-legal-todo">{children}</span>;
-
 export function ContactPage() {
   return (
     <LegalLayout title="Contact & Support" icon="mail" lastUpdated="September 17, 2026">
       <p>
-        Treco is a free, open-source project maintained by an individual developer - there's no support team or company
-        behind it. The most reliable way to reach the developer right now is through the project's GitHub repository.
+        Treco is a free, open-source project maintained by an individual developer - there's no support team, company,
+        or dedicated email inbox behind it. The project's public GitHub repository is the official contact and
+        support channel.
       </p>
 
-      <h2>GitHub (current primary channel)</h2>
+      <h2>GitHub (official channel)</h2>
       <p>
-        For bug reports, provider-compatibility issues, or feature requests, opening an issue on GitHub is the best way to
-        reach the developer:
+        For bug reports, provider-compatibility issues, and feature requests, open an issue directly:
       </p>
       <p>
         <a
@@ -31,10 +29,29 @@ export function ContactPage() {
         </a>
       </p>
 
-      <h2>Email</h2>
+      <h2>Security or privacy reports</h2>
       <p>
-        A dedicated contact email has not been set up yet: <TODO>[PLACEHOLDER: contact email - to be added once configured]</TODO>.
-        This page will be updated with a real address once one exists - until then, please use GitHub.
+        For anything sensitive - a suspected security or privacy issue you'd rather not post publicly - use GitHub's
+        private vulnerability reporting on the repository instead of a public issue:
+      </p>
+      <p>
+        <a
+          href="https://github.com/medaharrat/treco/security/advisories/new"
+          target="_blank"
+          rel="noreferrer"
+          className="af-btn af-btn-secondary"
+          style={{ display: "inline-flex", textDecoration: "none" }}
+        >
+          <Icon name="external" size={15} strokeWidth={2} />
+          github.com/medaharrat/treco/security/advisories/new
+        </a>
+      </p>
+      <p className="af-muted" style={{ fontSize: 12.5 }}>
+        See{" "}
+        <a href="https://github.com/medaharrat/treco/blob/main/SECURITY.md" target="_blank" rel="noreferrer">
+          SECURITY.md
+        </a>{" "}
+        in the repository for what a good report should include.
       </p>
 
       <h2>What you can reach out about</h2>

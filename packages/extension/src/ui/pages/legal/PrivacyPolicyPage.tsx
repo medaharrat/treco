@@ -2,19 +2,17 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { LegalLayout } from "../../components/LegalLayout.js";
 
-const TODO = ({ children }: { children: React.ReactNode }) => <span className="af-legal-todo">{children}</span>;
-
 export function PrivacyPolicyPage() {
   return (
     <LegalLayout title="Privacy Policy" icon="shield" lastUpdated="September 17, 2026">
       <p className="af-muted" style={{ marginTop: -8, fontSize: 12.5 }}>
-        Effective date: <TODO>[PLACEHOLDER: effective date, to be set at public release]</TODO>
+        Effective date: September 17, 2026
       </p>
       <p>
         Treco is a free, open-source, non-commercial browser extension, developed and maintained by an individual
-        developer - not a company. This Privacy Policy explains what Treco does, what data it processes, and what it
-        never collects. It describes the extension exactly as implemented today, not an idealized version of it.
-        Wherever a detail hasn't been finalized, that is marked clearly below rather than guessed at.
+        developer - not a company, and not operated through any registered business entity. This Privacy Policy
+        explains what Treco does, what data it processes, and what it never collects. It describes the extension
+        exactly as implemented today, not an idealized version of it.
       </p>
 
       <h2>1. What Treco does</h2>
@@ -119,8 +117,8 @@ export function PrivacyPolicyPage() {
       <h2>8. Your controls</h2>
       <ul>
         <li>
-          <strong>Delete your data:</strong> Settings → Data storage → "Delete all data" permanently removes all locally stored
-          usage history.
+          <strong>Delete your data:</strong> Settings → Data storage → "Delete all usage history" permanently removes all
+          locally stored usage history.
         </li>
         <li>
           <strong>Export your data:</strong> Settings → Data storage lets you export all stored usage records as JSON or CSV at
@@ -151,10 +149,9 @@ export function PrivacyPolicyPage() {
 
       <h2>10. Children's privacy</h2>
       <p>
-        Treco is not directed at children and is not intended for use by anyone under the age of{" "}
-        <TODO>[PLACEHOLDER: minimum age, e.g. 13 or 16 depending on jurisdiction]</TODO>. Treco does not knowingly collect
-        personal information from children, and given it has no account system, no personal information is knowingly
-        collected from anyone.
+        Treco is not directed at children and is not intended for use by anyone under the age of 18. Treco does not
+        knowingly collect personal information from children, and given it has no account system, no personal
+        information is knowingly collected from anyone.
       </p>
 
       <h2>11. Changes to this policy</h2>
@@ -170,11 +167,18 @@ export function PrivacyPolicyPage() {
         status and third-party attributions.
       </p>
 
-      <h2>13. Contact</h2>
+      <h2>13. Legal identity</h2>
       <p>
-        Questions about this policy or Treco's data practices - see the <Link to="/legal/contact">Contact</Link> page for the
-        current ways to reach the developer. A dedicated contact address has not been set up yet; this section will be updated
-        once one exists.
+        Treco is operated by an individual developer, not through a registered company or commercial entity. There is
+        no corporate address to disclose here because none exists - this policy is issued directly by the developer,
+        based in Hungary.
+      </p>
+
+      <h2>14. Contact</h2>
+      <p>
+        Questions about this policy or Treco's data practices can be raised via the project's public GitHub
+        repository - see the <Link to="/legal/contact">Contact</Link> page for the exact link and what to include in
+        a report.
       </p>
     </LegalLayout>
   );

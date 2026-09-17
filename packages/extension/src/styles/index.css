@@ -890,22 +890,6 @@ a {
   font-weight: 650;
 }
 
-.af-legal-todo {
-  display: inline;
-  background: #f3e8d5;
-  color: var(--af-warning);
-  padding: 1px 7px;
-  border-radius: 6px;
-  font-weight: 650;
-  font-size: 12.5px;
-  white-space: nowrap;
-}
-
-:root[data-theme="dark"] .af-legal-todo,
-:root:not([data-theme="light"]) .af-legal-todo {
-  background: #332a17;
-}
-
 .af-legal-footer {
   display: flex;
   flex-wrap: wrap;

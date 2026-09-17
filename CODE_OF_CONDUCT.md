@@ -35,10 +35,10 @@ spaces when an individual is representing the project.
 
 ## Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the maintainer at
-`[TODO: conduct-report contact - not yet configured; a placeholder, not a real address]`, or via a GitHub issue
-marked clearly as sensitive if no other channel is available yet. All complaints will be reviewed and investigated
-promptly and fairly.
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the maintainer via the
+project's GitHub repository - use [private vulnerability reporting](https://github.com/medaharrat/treco/security/advisories/new)
+for anything sensitive, or a GitHub issue marked clearly as such otherwise. All complaints will be reviewed and
+investigated promptly and fairly.
 
 ## Attribution
 
