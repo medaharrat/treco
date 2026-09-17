@@ -91,6 +91,31 @@ This keyword-matching approach is inherently a coarse, best-effort heuristic bas
 provider's page happens to expose - not a measurement of what actually ran. It is the largest source of uncertainty
 in the whole calculation, most of all for reasoning and agentic modes.
 
+## Other providers we checked
+
+Only OpenAI and Google have a disclosed profile. Before adding one for any other provider, we checked what's actually
+been published, rather than assuming either "no one else discloses anything" or reaching for a third-party estimate
+and treating it as if the company said it:
+
+- **Mistral (Le Chat)** published a genuinely rigorous disclosure — an ISO 14040/44-compliant lifecycle assessment
+  (with Carbone 4 and the French environmental agency ADEME) giving 1.14 g CO2e and 45 mL water per 400-token
+  response. It's arguably more methodologically solid than OpenAI's or Google's blog-post figures. But it doesn't
+  include an energy (Wh) number — confirmed by checking the primary announcement directly, not assumed — and Wh is
+  the one quantity this engine's entire calculation is built around (tokens → energy → CO2e/water, in that order).
+  Deriving an implied energy figure from their CO2e using our own assumed grid intensity would mean inventing the
+  one number they didn't give us, which is exactly what this project tries not to do. Le Chat stays on the generic
+  fallback tier until/unless Mistral (or an independent audit of their methodology) discloses the energy figure too.
+- **Anthropic (Claude)** has published no per-query energy, water, or carbon figure. Third-party estimates exist
+  online; none are Anthropic's own disclosure, so none are treated as one.
+- **DeepSeek** has published nothing official either. An independent academic benchmark has measured DeepSeek-R1
+  specifically (Jegham et al. 2025, below) — useful background for calibrating the fallback tiers, not a substitute
+  for a provider disclosure.
+- **Microsoft Copilot, Grok (xAI), Perplexity, Poe, and Character.AI** — no official per-query environmental
+  disclosure found for any of them as of this document's last review.
+
+If any of this changes, the affected provider gets a real disclosed profile the same way OpenAI's and Google's did:
+built from their own published figure, not an estimate of one.
+
 ## Global default assumptions
 
 When no model-specific figure applies, these industry-average-order-of-magnitude defaults are used (all overridable
@@ -132,6 +157,12 @@ magnitude for themselves rather than taking this project's word for it:
   industry-average PUE.
 - [IEA, Electricity](https://www.iea.org/topics/electricity) — order-of-magnitude reference for global average grid
   carbon intensity.
+- Mistral AI, ["Our contribution to a global environmental standard for AI"](https://mistral.ai/news/our-contribution-to-a-global-environmental-standard-for-ai/)
+  (July 2025) — real, ISO-compliant per-response CO2e/water figures for Le Chat; not usable as a disclosed profile
+  here because it omits the energy (Wh) figure this engine requires. See "Other providers we checked" above.
+- Jegham, N. et al., ["How Hungry is AI? Benchmarking Energy, Water, and Carbon Footprint of LLM Inference"](https://arxiv.org/abs/2505.09598)
+  (2025) — independent academic benchmark covering several models including DeepSeek-R1, informing the fallback
+  tiers' order of magnitude for providers with no official disclosure.
 
 ## What this deliberately does not do
 

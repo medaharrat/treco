@@ -29,6 +29,14 @@ const BACKGROUND_SOURCES: Citation[] = [
   {
     text: "IEA, Electricity and Global Energy Review data series - order-of-magnitude reference for global average grid carbon intensity.",
     url: "https://www.iea.org/topics/electricity"
+  },
+  {
+    text: "Mistral AI, \"Our contribution to a global environmental standard for AI\" (July 2025) - an ISO 14040/44-compliant lifecycle assessment (with Carbone 4 and ADEME) disclosing 1.14 g CO2e and 45 mL water per 400-token Le Chat response. Not used as a disclosed profile in this app because it doesn't include an energy (Wh) figure - see \"Other providers we checked\" below.",
+    url: "https://mistral.ai/news/our-contribution-to-a-global-environmental-standard-for-ai/"
+  },
+  {
+    text: "Jegham, N. et al., \"How Hungry is AI? Benchmarking Energy, Water, and Carbon Footprint of LLM Inference\" (2025) - independent academic benchmark measuring several models including DeepSeek-R1, informing this app's fallback-tier order of magnitude for providers with no official disclosure.",
+    url: "https://arxiv.org/abs/2505.09598"
   }
 ];
 
@@ -115,6 +123,43 @@ export function MethodologyPage() {
             </div>
           ))}
         </div>
+      </Card>
+
+      <Card>
+        <h2 className="af-h2">Other providers we checked</h2>
+        <p style={{ fontSize: 13.5, lineHeight: 1.7 }}>
+          Only OpenAI and Google have published a per-query energy figure specific enough to build a disclosed
+          profile from. Here's what we found for the rest, checked directly rather than assumed:
+        </p>
+        <ul style={{ fontSize: 13, lineHeight: 1.8, paddingLeft: 20 }}>
+          <li>
+            <strong>Mistral (Le Chat)</strong> published a real, rigorous disclosure - an ISO 14040/44-compliant
+            lifecycle assessment giving 1.14 g CO2e and 45 mL water per 400-token response. It's genuinely more
+            methodologically rigorous than OpenAI's or Google's blog-post figures. But it doesn't include an energy
+            (Wh) number, which is the one quantity this app's entire calculation is built around - tokens convert to
+            energy first, and CO2e/water are derived from that. Without it, using their CO2e/water figures directly
+            would mean inventing the missing energy value ourselves, which is exactly the kind of unsourced number
+            this app tries not to produce. Le Chat uses the generic fallback tier instead, for now.
+          </li>
+          <li>
+            <strong>Anthropic (Claude)</strong> has not published a per-query energy, water, or carbon figure.
+            Third-party estimates exist online, but none are the company's own disclosure, so we don't treat them as
+            one.
+          </li>
+          <li>
+            <strong>DeepSeek</strong> has not published an official figure either. An independent academic benchmark
+            has measured DeepSeek-R1 specifically (see "Sources &amp; further reading" below) - informative
+            background for the fallback tiers, not a substitute for a provider disclosure.
+          </li>
+          <li>
+            <strong>Microsoft Copilot, Grok (xAI), Perplexity, Poe, and Character.AI</strong> - no official per-query
+            environmental disclosure found for any of them as of this page's last review.
+          </li>
+        </ul>
+        <p className="af-muted" style={{ fontSize: 12, marginTop: 0 }}>
+          If that changes, the affected provider gets its own disclosed profile the same way OpenAI's and Google's
+          did - built from their real published figure, not an estimate of one.
+        </p>
       </Card>
 
       <Card>
