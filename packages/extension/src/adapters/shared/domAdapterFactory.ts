@@ -116,9 +116,21 @@ export function createDomAdapter(config: DomAdapterConfig): AIProviderAdapter {
     });
   }
 
+  /**
+   * Returns whether this call actually emitted at least one new candidate -
+   * NOT merely whether the selectors matched something anywhere on the page.
+   * Once a page has any assistant-message node at all, a selector keeps
+   * matching it forever (it's still in the DOM), so "matched something" is
+   * true almost permanently and would make handleQuietPeriod's fallback
+   * decision below meaningless. What handleQuietPeriod actually needs to
+   * know is "did this specific quiet period produce a real event" - e.g. a
+   * turn whose real content renders in a side panel (a generated document,
+   * a canvas/artifact view) rather than inside a matched message node would
+   * otherwise silently produce nothing at all, with no fallback catching it.
+   */
   function scanStructured(emit: (event: UsageEvent | null) => void): boolean {
     if (!container) return false;
-    let foundAny = false;
+    let emittedNew = false;
 
     for (const sel of config.assistantMessageSelectors) {
       let nodes: Element[];
@@ -127,7 +139,6 @@ export function createDomAdapter(config: DomAdapterConfig): AIProviderAdapter {
       } catch {
         continue;
       }
-      if (nodes.length > 0) foundAny = true;
 
       for (const node of nodes) {
         if (processed.has(node)) continue;
@@ -148,10 +159,11 @@ export function createDomAdapter(config: DomAdapterConfig): AIProviderAdapter {
             tokenMethod: inputEstimate ? "estimated" : "inferred"
           })
         );
+        emittedNew = true;
       }
     }
 
-    return foundAny || config.assistantMessageSelectors.length > 0;
+    return emittedNew;
   }
 
   /**
@@ -182,8 +194,8 @@ export function createDomAdapter(config: DomAdapterConfig): AIProviderAdapter {
   }
 
   function handleQuietPeriod(emit: (event: UsageEvent | null) => void) {
-    const structuredConfigured = scanStructured(emit);
-    if (!structuredConfigured) {
+    const emittedFromStructuredScan = scanStructured(emit);
+    if (!emittedFromStructuredScan) {
       scanGeneric(emit);
     }
   }
@@ -219,8 +231,8 @@ export function createDomAdapter(config: DomAdapterConfig): AIProviderAdapter {
       const emit = (event: UsageEvent | null) => {
         if (event) result = event;
       };
-      const structuredConfigured = scanStructured(emit);
-      if (!structuredConfigured || !result) {
+      const emittedFromStructuredScan = scanStructured(emit);
+      if (!emittedFromStructuredScan) {
         lastGenericLength = 0;
         scanGeneric(emit);
       }
