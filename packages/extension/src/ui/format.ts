@@ -25,6 +25,10 @@ export function formatMass(grams: number, units: ExtensionSettings["units"] = "m
     return `${lb.toFixed(lb >= 10 ? 1 : 2)} lb`;
   }
   if (grams >= 1000) return `${(grams / 1000).toFixed(grams / 1000 >= 10 ? 1 : 2)} kg`;
+  // Rounding straight to a whole gram would silently show "0 g" for any real
+  // but small amount (e.g. a single short reply, ~0.1-0.5 g CO2e) - the same
+  // false-zero problem as the smartphone-charge comparison sentence.
+  if (grams > 0 && grams < 10) return `${grams.toFixed(grams < 1 ? 2 : 1)} g`;
   return `${Math.round(grams)} g`;
 }
 
@@ -35,6 +39,9 @@ export function formatVolume(ml: number, units: ExtensionSettings["units"] = "me
     return `${flOz.toFixed(flOz >= 10 ? 0 : 1)} fl oz`;
   }
   if (ml >= 1000) return `${(ml / 1000).toFixed(ml / 1000 >= 10 ? 1 : 2)} L`;
+  // Same false-zero fix as formatMass: a single reply's water use is
+  // routinely well under 1 mL, and rounding to a whole mL hides that.
+  if (ml > 0 && ml < 10) return `${ml.toFixed(ml < 1 ? 2 : 1)} mL`;
   return `${Math.round(ml)} mL`;
 }
 
