@@ -14,6 +14,10 @@ import { SettingsPage } from "./pages/SettingsPage.js";
 import { MethodologyPage } from "./pages/MethodologyPage.js";
 import { PrivacyPage } from "./pages/PrivacyPage.js";
 import { OnboardingPage } from "./pages/OnboardingPage.js";
+import { PrivacyPolicyPage } from "./pages/legal/PrivacyPolicyPage.js";
+import { TermsPage } from "./pages/legal/TermsPage.js";
+import { ContactPage } from "./pages/legal/ContactPage.js";
+import { LicensesPage } from "./pages/legal/LicensesPage.js";
 
 function Gate({ children }: { children: React.ReactNode }) {
   const { settings, loading } = useStorage();
@@ -54,6 +58,10 @@ function Shell() {
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/methodology" element={<MethodologyPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/legal/privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="/legal/terms" element={<TermsPage />} />
+            <Route path="/legal/contact" element={<ContactPage />} />
+            <Route path="/legal/licenses" element={<LicensesPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>

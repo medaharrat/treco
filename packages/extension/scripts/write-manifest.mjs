@@ -23,8 +23,8 @@ const hostPermissions = matches;
 
 const base = {
   manifest_version: 3,
-  name: "AI Footprint",
-  short_name: "AI Footprint",
+  name: "Treco",
+  short_name: "Treco",
   version: "0.1.0",
   description:
     "See your AI usage and its estimated energy, CO2e and water footprint - entirely on your device. No conversations collected, ever.",
@@ -41,10 +41,18 @@ const base = {
       32: "icons/icon-32.png",
       48: "icons/icon-48.png"
     },
-    default_title: "AI Footprint"
+    default_title: "Treco"
   },
-  permissions: ["storage", "alarms"],
+  // Only what's actually used: local storage for usage data/settings. No
+  // "just in case" permissions - e.g. no `alarms`, since nothing schedules
+  // anything, and no `notifications`, since there is no notification feature.
+  permissions: ["storage"],
   host_permissions: hostPermissions,
+  // Explicit, not just relying on the MV3 default: no remote code, no inline
+  // script execution, nothing but the extension's own bundled scripts.
+  content_security_policy: {
+    extension_pages: "script-src 'self'; object-src 'self'"
+  },
   content_scripts: [
     {
       matches,

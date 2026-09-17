@@ -4,6 +4,7 @@ import { PROVIDER_REGISTRY, exportEventsAsCSV, exportEventsAsJSON, getGlobalDefa
 import { useStorage } from "../state/StorageContext.js";
 import { Card } from "../components/Card.js";
 import { Toggle } from "../components/Toggle.js";
+import { Icon } from "../components/Icons.js";
 
 function downloadFile(filename: string, content: string, mime: string) {
   const blob = new Blob([content], { type: mime });
@@ -42,13 +43,16 @@ export function SettingsPage() {
 
   return (
     <div>
-      <h1 className="af-h1">Settings</h1>
+      <h1 className="af-h1" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <Icon name="settings" size={19} strokeWidth={2} />
+        Settings
+      </h1>
       <p className="af-subtitle">Everything here is stored locally on this device.</p>
 
       <Card>
         <h2 className="af-h2">Privacy</h2>
         <p className="af-muted" style={{ fontSize: 13 }}>
-          AI Footprint never reads or stores your prompts, responses, or any page content beyond a rendered text length used to
+          Treco never reads or stores your prompts, responses, or any page content beyond a rendered text length used to
           estimate token counts. No account is required, and nothing is sent to any server.
         </p>
         <Link to="/privacy" className="af-btn af-btn-secondary af-mt-3" style={{ display: "inline-flex" }}>
@@ -133,14 +137,6 @@ export function SettingsPage() {
       </Card>
 
       <Card>
-        <h2 className="af-h2">Notifications</h2>
-        <div className="af-toggle-row">
-          <span>Weekly summary notification</span>
-          <Toggle on={settings.notificationsEnabled} onChange={(on) => void updateSettings({ notificationsEnabled: on })} label="Weekly summary notification" />
-        </div>
-      </Card>
-
-      <Card>
         <h2 className="af-h2">Data storage</h2>
         <p className="af-muted" style={{ fontSize: 13 }}>
           {events.length.toLocaleString()} interaction{events.length === 1 ? "" : "s"} stored locally on this device.
@@ -176,11 +172,14 @@ export function SettingsPage() {
         <div className="af-mt-4" style={{ borderTop: "1px solid var(--af-border-soft)", paddingTop: 16 }}>
           {!confirmingDelete ? (
             <button className="af-btn af-btn-danger" onClick={() => setConfirmingDelete(true)}>
-              Delete all data
+              Delete all usage history
             </button>
           ) : (
             <div className="af-flex-col af-gap-2">
-              <p style={{ fontSize: 13 }}>This permanently deletes all locally stored usage data. This cannot be undone.</p>
+              <p style={{ fontSize: 13 }}>
+                This permanently deletes all locally stored usage history (every recorded interaction). Your goals and
+                settings are not affected. This cannot be undone.
+              </p>
               <div className="af-row af-gap-2" style={{ justifyContent: "flex-start" }}>
                 <button
                   className="af-btn af-btn-danger"
@@ -189,7 +188,7 @@ export function SettingsPage() {
                     setConfirmingDelete(false);
                   }}
                 >
-                  Yes, delete everything
+                  Yes, delete usage history
                 </button>
                 <button className="af-btn af-btn-secondary" onClick={() => setConfirmingDelete(false)}>
                   Cancel
@@ -203,9 +202,35 @@ export function SettingsPage() {
       <Card>
         <h2 className="af-h2">About</h2>
         <p className="af-muted" style={{ fontSize: 13 }}>
-          AI Footprint v0.1.0. Open source, privacy-first, offline-first. Built to help you understand AI usage without collecting
+          Treco v0.1.0. Open source, privacy-first, offline-first. Built to help you understand AI usage without collecting
           any of it.
         </p>
+      </Card>
+
+      <Card>
+        <h2 className="af-h2">Legal & Support</h2>
+        <div className="af-legal-list">
+          <Link className="af-legal-list-item" to="/legal/privacy-policy">
+            <Icon name="shield" size={16} strokeWidth={1.8} />
+            Privacy Policy
+            <Icon name="chevronRight" size={15} strokeWidth={2} className="af-legal-list-item-arrow" />
+          </Link>
+          <Link className="af-legal-list-item" to="/legal/terms">
+            <Icon name="file" size={16} strokeWidth={1.8} />
+            Terms of Use
+            <Icon name="chevronRight" size={15} strokeWidth={2} className="af-legal-list-item-arrow" />
+          </Link>
+          <Link className="af-legal-list-item" to="/legal/contact">
+            <Icon name="mail" size={16} strokeWidth={1.8} />
+            Contact & Support
+            <Icon name="chevronRight" size={15} strokeWidth={2} className="af-legal-list-item-arrow" />
+          </Link>
+          <Link className="af-legal-list-item" to="/legal/licenses">
+            <Icon name="layers" size={16} strokeWidth={1.8} />
+            Open Source & Licenses
+            <Icon name="chevronRight" size={15} strokeWidth={2} className="af-legal-list-item-arrow" />
+          </Link>
+        </div>
       </Card>
     </div>
   );

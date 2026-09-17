@@ -5,18 +5,22 @@ with more implementation detail on how each guarantee is actually enforced in co
 
 ## What is never collected
 
-- Prompts or responses (the actual conversation content)
-- Screenshots or page content beyond a momentary rendered-text-length measurement
+- Prompts or responses (the actual conversation content) as persisted or transmitted data
+- Screenshots
 - Cookies or authentication tokens
 - Any personally identifiable information
-- Any data at all sent to an AI Footprint server — because none exists
+- Any data at all sent to a Treco server — because none exists
 
 ## What is accessed, and why
 
 On pages belonging to AI products a user has explicitly enabled (see onboarding / Settings → Providers), the content
-script observes DOM mutations to detect when a new message has finished rendering, and reads that element's
-`textContent.length` to estimate a token count. The string itself is never stored, logged, or forwarded — only the
-resulting numbers cross into extension messaging.
+script observes DOM mutations to detect when a new message has finished rendering. To be precise rather than
+reassuring-but-vague: it reads that element's actual rendered text (`node.textContent`) — not merely its length — and
+passes it to `estimateTokensFromText()`, which measures both character length and word count (splitting on
+whitespace) to produce a token estimate, since that heuristic is more accurate than length alone. That function takes
+the string only as a transient argument and returns nothing but numbers (`{ tokens, range, method }`); the string
+itself is never stored, logged, or forwarded anywhere — only the resulting numeric estimate crosses into extension
+messaging. See `packages/core/src/tokens/estimate.ts` for the exact implementation.
 
 Concretely, the only thing sent from a content script to the background service worker is:
 
@@ -65,9 +69,14 @@ rejected end-to-end.
 The manifest requests:
 
 - `storage` — to persist usage data locally
-- `alarms` — reserved for potential future local scheduling (e.g. a weekly summary notification); nothing currently
-  uses it beyond the notification preference toggle in Settings
 - `host_permissions` scoped to exactly the domains in the provider registry — never `<all_urls>`
+
+No other permission is requested. In particular, there is no `alarms`, `notifications`, `tabs`, `history`, `cookies`,
+`debugger`, `webRequest`, `webNavigation`, `downloads`, or `management` permission - each was considered and left out
+because nothing in the current feature set needs it. (An earlier draft of Settings had a "weekly summary
+notification" toggle that implied scheduled notifications; it was removed because it had no actual `alarms`/
+`notifications` implementation behind it - a permission or a UI control should never exist for something the code
+doesn't actually do.)
 
 Content scripts are declared with `matches` scoped to those same domains, so the extension's code simply does not run
 on any other website. There is no `externally_connectable` configuration, so arbitrary web pages cannot send messages

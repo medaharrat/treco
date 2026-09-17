@@ -38,7 +38,6 @@ describe("MemoryStorageAdapter", () => {
       theme: "dark",
       units: "metric",
       carbonIntensityOverrideGPerKwh: null,
-      notificationsEnabled: false,
       onboardingCompleted: true
     });
     const settings = await storage.getSettings();

@@ -19,23 +19,34 @@
 Provider web page (e.g. chat.openai.com)
         │  DOM mutations (new message rendered)
         ▼
-Content script (isolated world)
+Content script (isolated world, one instance per matching tab)
   - adapters/registry.ts picks the matching AIProviderAdapter by hostname
-  - adapter.observe() debounces streaming, measures rendered text LENGTH only
-  - core.estimateTokensFromText() turns that length into a token estimate
-  - the text itself is never stored or forwarded anywhere
+    (adapter.detect() only ever returns true for that adapter's own registered
+     domains — see "Provider isolation" below)
+  - adapter.observe() reads the relevant DOM node's rendered text transiently,
+    in-memory, purely to compute a character/token count
+  - core.estimateTokensFromText() turns that text into a numeric token estimate
+    and returns only numbers — this is the last point in the pipeline where the
+    actual page text exists anywhere; nothing downstream of this call ever sees
+    the text itself, only the resulting counts
+  - the candidate object sent onward contains only {provider, model, inputTokens,
+    outputTokens, tokenMethod, timestamp} — no text field exists on this type,
+    so there is nothing to smuggle a leak through even by mistake
         │  runtime.sendMessage({ type: "aifootprint/usage-candidate", payload })
-        │  payload = { provider, model, inputTokens, outputTokens, tokenMethod, timestamp }
         ▼
 Background service worker (the trust boundary)
-  - validateUsageEventCandidate() strictly re-validates the message
-    (rejects unknown providers, extra fields, out-of-range/negative/NaN numbers,
-     implausible timestamps)
+  - validateUsageEventCandidate() strictly re-validates the message against an
+    allow-list schema (rejects unknown providers, extra fields, wrong types,
+    out-of-range/negative/NaN numbers, implausible timestamps)
+  - cross-checks the sender's actual tab URL against the claimed provider's
+    registered domain (getProviderByDomain) — a message can't be attributed to
+    a provider it didn't actually come from
   - checks the provider is actually enabled in settings
   - buildUsageEvent() independently resolves a ModelFootprintProfile and computes
     energy/CO2e/water — the background never trusts figures from the content script
   - storage.addEvent() persists the resulting UsageEvent via browser.storage.local,
-    itself re-checked against assertPrivacySafe()'s field allow-list
+    itself re-checked field-by-field (type and range, not just key names) against
+    assertPrivacySafe()'s allow-list
         │  browser.storage.onChanged fires
         ▼
 Popup / Dashboard (React, reads storage directly)
@@ -86,6 +97,37 @@ has two tiers (see `extension/src/adapters/shared/domAdapterFactory.ts`):
 This means an adapter degrades gracefully instead of going silent when a provider changes its UI, and the UI always
 shows which tier produced a given number.
 
+## Provider isolation
+
+Each provider adapter is restricted to its own domain(s) in two independent layers:
+
+1. **Manifest-level:** `content_scripts.matches`/`host_permissions` are generated from the same
+   `PROVIDER_REGISTRY` (`scripts/write-manifest.mjs`), so the browser itself only ever injects the content script into
+   pages on the supported provider domains — it cannot run anywhere else.
+2. **Application-level:** `adapters/registry.ts` picks an adapter via `adapter.detect()`, which checks
+   `location.hostname` against that specific adapter's own `domains` list. `PROVIDER_REGISTRY` also guarantees each
+   domain maps to exactly one provider (`getProviderByDomain`), and the background service worker cross-checks a
+   message's claimed provider against the sender's actual domain before ever recording it.
+
+No provider adapter can be triggered by, or misattributed to, another provider's traffic. This is covered by
+automated tests (`packages/extension/tests/security.test.ts`, `backgroundSecurity.test.ts`).
+
+## Security invariants and how they're enforced
+
+| Property | Enforced by |
+|---|---|
+| No network requests anywhere in the codebase | Automated source-scan test + built-bundle scan for `fetch`/`XMLHttpRequest`/`WebSocket`/`sendBeacon`/`eval`/`new Function` |
+| No remote/dynamically-downloaded code | Manifest V3 default sandboxing + an explicit `content_security_policy` (`script-src 'self'; object-src 'self'`) generated into every build |
+| Conversation text can't reach storage | `UsageEventCandidate` has no text field at the type level; `validateUsageEventCandidate` and `assertPrivacySafe` both reject unexpected fields and implausibly long strings |
+| Only the approved schema is ever stored | `assertPrivacySafe` type- and range-checks every field on every write (`storage.addEvent`, `replaceAllEvents`) and on every import |
+| Minimal permissions | Manifest requests only `storage`; no `alarms`, `tabs`, `history`, `cookies`, `debugger`, `webRequest`, `webNavigation`, `downloads`, `management`, or `<all_urls>` |
+| Provider isolation | Manifest host restrictions + `adapter.detect()` + background sender-domain cross-check (see above) |
+| Imports can't smuggle oversized or malformed data | `parseImportedJSON` caps raw text size and event count before parsing, then validates every event |
+| CSV exports can't execute as spreadsheet formulas | `exportEventsAsCSV` prefixes any cell starting with `=`, `+`, `-`, `@`, tab, or CR with a neutralizing quote |
+
+Run `npm test` to execute this invariant suite alongside the rest of the tests; run `npm run build && npm test` to
+additionally have it inspect the actual built extension bundle rather than only the source.
+
 ## Cross-browser strategy
 
 - **Manifest V3** everywhere, generated per-target by `scripts/write-manifest.mjs` from the same provider registry.
@@ -95,3 +137,21 @@ shows which tier produced a given number.
   the codebase only ever sees the promise-based `browser.*` API, not `chrome.*` callbacks.
 - The content script is built as a dependency-free IIFE (see `vite.content.config.ts`) rather than an ES module,
   since manifest-declared content scripts cannot reliably use `import`/`export` across every supported browser.
+- Vite's default "modulepreload" polyfill (which calls `fetch()` to warm the cache for chunk dependencies) is
+  disabled (`build.modulePreload: false` in `vite.config.ts`) - Treco doesn't need that optimization inside an
+  extension page, and disabling it means the built output contains zero calls to `fetch` anywhere, not just in
+  Treco's own code.
+
+## Store compatibility notes
+
+- **Chrome, Edge, Brave, Opera**: all Chromium-based and MV3-compatible; built from the same `chrome` target.
+- **Firefox**: MV3 with an event-page-style background (`background.scripts`, not `service_worker`), built via the
+  `firefox` target. The `browser_specific_settings.gecko.id` in that manifest is currently a placeholder
+  (`ai-footprint@example.invalid`) and should be replaced with a real add-on ID before submission.
+- **Safari**: WebExtensions support requires converting the `chrome` build with Xcode's
+  `xcrun safari-web-extension-converter`, then signing/notarizing through an Apple Developer account - neither of
+  which is available in this repository's build environment. The codebase deliberately avoids Chromium- or
+  Firefox-only APIs so that conversion path stays viable; see `docs/LIMITATIONS.md`.
+- None of the store review guidelines for any of these browsers require broader permissions than Treco already
+  requests (`storage`, and host access to the specific supported AI domains) - the minimal permission set
+  is itself a compatibility advantage, since overly broad permissions are a common cause of store review friction.

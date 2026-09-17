@@ -33,6 +33,12 @@ export default defineConfig(({ mode }) => {
       outDir,
       emptyOutDir: true,
       target: "es2022",
+      // Vite's default modulepreload polyfill calls fetch() to warm the
+      // browser's cache for chunk dependencies. Treco has no network
+      // requests anywhere else in its code, and does not need this
+      // optimization inside an extension page - disabling it means the
+      // built bundle contains zero calls to fetch/XHR/WebSocket/etc.
+      modulePreload: false,
       rollupOptions: {
         input: {
           background: resolve(__dirname, "src/background/index.ts"),

@@ -202,7 +202,6 @@ export interface ExtensionSettings {
   theme: "system" | "light" | "dark";
   units: "metric" | "imperial";
   carbonIntensityOverrideGPerKwh: number | null;
-  notificationsEnabled: boolean;
   onboardingCompleted: boolean;
 }
 
@@ -211,6 +210,5 @@ export const DEFAULT_SETTINGS: ExtensionSettings = {
   theme: "system",
   units: "metric",
   carbonIntensityOverrideGPerKwh: null,
-  notificationsEnabled: false,
   onboardingCompleted: false
 };
