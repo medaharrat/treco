@@ -7,11 +7,11 @@ import { Toggle } from "../components/Toggle.js";
 const SCREENS = [
   {
     title: "Understand your AI footprint.",
-    body: "AI Footprint shows you how much you're using AI, and estimates the energy, CO2e and water associated with that usage - right on your device."
+    body: "Treco shows you how much you're using AI, and estimates the energy, CO2e and water associated with that usage - right on your device."
   },
   {
     title: "We track usage, not conversations.",
-    body: "AI Footprint never reads or stores your prompts or responses. It only measures things like token count estimates, timestamps and which model you used."
+    body: "Treco never reads or stores your prompts or responses. It only measures things like token count estimates, timestamps and which model you used."
   },
   {
     title: "Your data stays on your device.",
@@ -83,7 +83,7 @@ export function OnboardingPage() {
               Back
             </button>
             <button className="af-btn af-btn-primary" onClick={finish}>
-              Start using AI Footprint
+              Start using Treco
             </button>
           </div>
         </>

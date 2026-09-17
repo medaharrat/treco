@@ -50,10 +50,10 @@ export function ProviderDetailPage() {
 
       <Card className="af-mt-4">
         <div className="af-stat-grid">
-          <StatTile large value={formatCount(stats.totalTokens)} label="tokens" />
-          <StatTile large value={formatEnergy(stats.energyWh)} label="estimated energy" />
-          <StatTile large value={formatMass(stats.co2eGrams, settings.units)} label="estimated CO2e" />
-          <StatTile large value={formatVolume(stats.waterMl, settings.units)} label="estimated water" />
+          <StatTile large value={formatCount(stats.totalTokens)} label="Tokens" />
+          <StatTile large value={formatEnergy(stats.energyWh)} label="Estimated Energy" />
+          <StatTile large value={formatMass(stats.co2eGrams, settings.units)} label="Estimated CO2 Emissions" />
+          <StatTile large value={formatVolume(stats.waterMl, settings.units)} label="Estimated Water Usage" />
         </div>
       </Card>
 

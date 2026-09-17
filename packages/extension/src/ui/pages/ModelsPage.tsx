@@ -7,6 +7,7 @@ import { PeriodTabs } from "../components/PeriodTabs.js";
 import { BarList } from "../components/BarList.js";
 import { EmptyState } from "../components/EmptyState.js";
 import { ConfidenceBadge } from "../components/ConfidenceBadge.js";
+import { Icon } from "../components/Icons.js";
 import { formatCount, formatEnergy } from "../format.js";
 
 export function ModelsPage() {
@@ -16,7 +17,10 @@ export function ModelsPage() {
 
   return (
     <div>
-      <h1 className="af-h1">Models</h1>
+      <h1 className="af-h1" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <Icon name="layers" size={19} strokeWidth={2} />
+        Models
+      </h1>
       <p className="af-subtitle">Which models are behind your estimated footprint.</p>
       <PeriodTabs value={period} onChange={setPeriod} />
 

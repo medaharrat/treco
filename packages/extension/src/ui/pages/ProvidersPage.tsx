@@ -6,6 +6,7 @@ import { usePeriodStats } from "../hooks/usePeriodStats.js";
 import { Card } from "../components/Card.js";
 import { PeriodTabs } from "../components/PeriodTabs.js";
 import { EmptyState } from "../components/EmptyState.js";
+import { Icon } from "../components/Icons.js";
 import { formatCount, formatEnergy, formatMass, formatVolume } from "../format.js";
 
 export function ProvidersPage() {
@@ -15,7 +16,10 @@ export function ProvidersPage() {
 
   return (
     <div>
-      <h1 className="af-h1">Providers</h1>
+      <h1 className="af-h1" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <Icon name="globe" size={19} strokeWidth={2} />
+        Providers
+      </h1>
       <p className="af-subtitle">How your usage splits across the AI products you use.</p>
       <PeriodTabs value={period} onChange={setPeriod} />
 

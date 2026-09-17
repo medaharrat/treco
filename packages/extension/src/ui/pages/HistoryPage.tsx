@@ -4,6 +4,7 @@ import { useStorage } from "../state/StorageContext.js";
 import { Card } from "../components/Card.js";
 import { LineChart } from "../components/LineChart.js";
 import { BarList } from "../components/BarList.js";
+import { Icon } from "../components/Icons.js";
 import { formatCount, formatDateLabel, formatEnergy, formatMass, formatVolume } from "../format.js";
 
 type Metric = "tokens" | "energyWh" | "co2eGrams" | "waterMl" | "interactionCount";
@@ -62,7 +63,10 @@ export function HistoryPage() {
 
   return (
     <div>
-      <h1 className="af-h1">History &amp; Insights</h1>
+      <h1 className="af-h1" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <Icon name="clock" size={19} strokeWidth={2} />
+        History &amp; Insights
+      </h1>
       <p className="af-subtitle">Trends in your estimated AI footprint over time.</p>
 
       <Card>

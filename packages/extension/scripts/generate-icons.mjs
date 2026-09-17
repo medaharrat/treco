@@ -2,6 +2,11 @@
 // on a rounded square) with zero external dependencies, using Node's built-in
 // zlib deflate to hand-roll minimal PNGs. Real product artwork should replace
 // these before a store submission.
+//
+// NOTE: packages/extension/public/icons/*.png currently hold the actual Treco
+// logo (rendered from an SVG matching the in-app leaf mark), not this
+// script's output. Re-running this script will overwrite them with a cruder
+// placeholder - only do that intentionally.
 import { deflateSync } from "node:zlib";
 import { writeFileSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";

@@ -14,7 +14,7 @@ export function MethodologyPage() {
       </Link>
       <h1 className="af-h1 af-mt-2">Environmental methodology</h1>
       <p className="af-subtitle">
-        Every number in AI Footprint is an estimate. Here is exactly how each figure is calculated, what assumptions go into it,
+        Every number in Treco is an estimate. Here is exactly how each figure is calculated, what assumptions go into it,
         and how confident we are.
       </p>
 
