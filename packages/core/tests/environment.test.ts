@@ -104,4 +104,26 @@ describe("comparisons", () => {
   it("produces a neutral 'no usage' sentence for zero energy", () => {
     expect(primaryComparisonSentence(0)).toMatch(/no ai energy use/i);
   });
+
+  it("uses seconds of an LED bulb for very small amounts, never a rounded-to-zero comparison", () => {
+    const sentence = primaryComparisonSentence(0.05);
+    expect(sentence).toMatch(/led bulb.*second/i);
+    expect(sentence).not.toMatch(/0\.0/);
+  });
+
+  it("uses a percentage of a smartphone charge for small-but-not-tiny amounts", () => {
+    const sentence = primaryComparisonSentence(0.5);
+    expect(sentence).toMatch(/%.*smartphone charge/i);
+    expect(sentence).not.toMatch(/0\.0/);
+  });
+
+  it("uses a whole-charge count once usage exceeds a full smartphone charge equivalent", () => {
+    const sentence = primaryComparisonSentence(24); // 2 smartphone charges' worth
+    expect(sentence).toMatch(/charging a smartphone/i);
+  });
+
+  it("uses laptop-hours for large amounts", () => {
+    const sentence = primaryComparisonSentence(200); // 4 laptop-hours
+    expect(sentence).toMatch(/laptop/i);
+  });
 });
