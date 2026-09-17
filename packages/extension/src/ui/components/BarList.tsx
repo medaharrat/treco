@@ -23,7 +23,7 @@ export function BarList({ items, onSelect }: { items: BarListItem[]; onSelect?: 
         >
           <span className="af-bar-row-label">
             <span className="af-bar-dot" style={{ background: item.color ?? "var(--af-accent)" }} />
-            {item.label}
+            <span className="af-bar-row-label-text">{item.label}</span>
           </span>
           <span className="af-bar-track">
             <span className="af-bar-fill" style={{ width: `${Math.max(2, item.share * 100)}%` }} />
