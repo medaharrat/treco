@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { PROVIDER_REGISTRY } from "@ai-footprint/core";
 import { useStorage } from "../state/StorageContext.js";
 import { Icon, type IconName } from "../components/Icons.js";
+import { BrandIcon, hasBrandIcon } from "../components/BrandIcons.js";
 
 interface IntroStep {
   icon: IconName;
@@ -125,7 +126,11 @@ export function OnboardingPage() {
                       </span>
                     )}
                     <span className="af-onboarding-tile-icon" style={{ background: p.color }}>
-                      {PROVIDER_MONOGRAMS[p.id] ?? p.name.charAt(0)}
+                      {hasBrandIcon(p.id) ? (
+                        <BrandIcon providerId={p.id} size={18} />
+                      ) : (
+                        (PROVIDER_MONOGRAMS[p.id] ?? p.name.charAt(0))
+                      )}
                     </span>
                     <span className="af-onboarding-tile-name">{p.name}</span>
                   </button>

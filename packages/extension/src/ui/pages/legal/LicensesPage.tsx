@@ -6,7 +6,8 @@ const PACKAGES: Array<{ name: string; license: string; url: string }> = [
   { name: "React Router", license: "MIT", url: "https://github.com/remix-run/react-router" },
   { name: "webextension-polyfill", license: "Mozilla Public License 2.0", url: "https://github.com/mozilla/webextension-polyfill" },
   { name: "Vite", license: "MIT", url: "https://github.com/vitejs/vite" },
-  { name: "TypeScript", license: "Apache License 2.0", url: "https://github.com/microsoft/TypeScript" }
+  { name: "TypeScript", license: "Apache License 2.0", url: "https://github.com/microsoft/TypeScript" },
+  { name: "Simple Icons (brand marks used in onboarding)", license: "CC0 1.0", url: "https://github.com/simple-icons/simple-icons" }
 ];
 
 export function LicensesPage() {
@@ -49,6 +50,15 @@ export function LicensesPage() {
       </ul>
       <p className="af-muted" style={{ fontSize: 12.5 }}>
         Each package remains the property of its respective authors under its own license, linked above.
+      </p>
+
+      <h2>Third-party trademarks</h2>
+      <p className="af-muted" style={{ fontSize: 12.5 }}>
+        The onboarding screen displays brand marks (via Simple Icons, above) or short labels to identify the AI
+        products Treco can detect usage on. Those names and marks are trademarks of their respective owners
+        (OpenAI, Anthropic, Google, Microsoft, DeepSeek, Perplexity AI, xAI, Mistral AI, Quora, and Character
+        Technologies), used solely to identify compatibility - Treco is not affiliated with, endorsed by, or
+        sponsored by any of them.
       </p>
     </LegalLayout>
   );
