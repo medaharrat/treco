@@ -7,6 +7,12 @@ title: Chrome Web Store Listing — Treco (internal)
 Internal reference for submitting/updating Treco's Chrome Web Store listing. Not linked from the public docs site
 navigation — kept here so the copy has one source of truth and survives between submissions.
 
+> **Note (rejected submission, keyword spam):** an earlier version of the detailed description listed all 10
+> supported providers back-to-back in a comma-separated list. Chrome Web Store's automated review flagged this as
+> "excessive/irrelevant keywords" and rejected the item. Fixed by naming only 1-2 providers inline and pointing to
+> the in-extension Settings page for the full list, instead of enumerating every brand name in the store
+> description. Avoid reintroducing a long comma-separated brand-name list in this field.
+
 ## Short description (max 132 characters)
 
 ```
@@ -23,8 +29,9 @@ your device. There's no account, no server, and no conversation content ever col
 
 WHAT IT DOES
 
-• Detects when you use a supported AI product (ChatGPT, Claude, Gemini, Microsoft Copilot, DeepSeek, Perplexity,
-  Grok, Mistral's Le Chat, Poe, Character.AI) and estimates the tokens involved in each interaction.
+• Automatically detects when you're chatting with a supported AI assistant (works with ChatGPT and Claude, among
+  others — see the full compatibility list on the extension's Settings page) and estimates the tokens involved in
+  each interaction.
 • Converts those tokens into an estimated energy, CO2e, and water footprint using a documented, per-model
   calculation engine with real, cited sources — never a single hardcoded "grams of CO2 per token" constant.
 • Shows a clean dashboard: today/week/month/all-time summaries, a timeline, provider and model breakdowns,
@@ -57,7 +64,10 @@ https://github.com/medaharrat/treco
 
 ## Category
 
-**Productivity** (secondary consideration: "Tools")
+**Workflow & Planning** (secondary consideration: "Tools")
+
+Note: Chrome Web Store's category taxonomy changed in 2023 — "Productivity" was split into several categories,
+and there are no subcategories within any of the current top-level options.
 
 ## Single purpose statement
 
@@ -89,8 +99,9 @@ For the Chrome Web Store Developer Dashboard's "Privacy practices" tab:
 
 ## Store icon / images checklist
 
-- [x] 128×128 icon — `packages/extension/public/icons/icon-128.png` (already in the package)
-- [ ] At least 1 screenshot, 1280×800 or 640×400, no alpha channel — see `store-assets/screenshots/`
+- [x] 128×128 store icon — `packages/extension/public/icons/icon-128.png` (also copied to `chrome-store-upload/store-icon-128.png`
+  for the dashboard's separate "Store icon" upload field)
+- [x] Screenshots, 1280×800, no alpha channel — see `chrome-store-upload/screenshots/`
 - [ ] Optional: small promo tile, 440×280
 
 ## Links to paste into the listing
