@@ -25,7 +25,7 @@ const base = {
   manifest_version: 3,
   name: "Treco",
   short_name: "Treco",
-  version: "0.1.0",
+  version: "1.0.0",
   description:
     "See your AI usage and its estimated energy, CO2e and water footprint - entirely on your device. No conversations collected, ever.",
   icons: {

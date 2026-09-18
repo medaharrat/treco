@@ -1,3 +1,7 @@
+---
+title: Privacy Architecture — Treco
+---
+
 # Privacy architecture
 
 This is the same content shown in the extension's own Privacy page (`packages/extension/src/ui/pages/PrivacyPage.tsx`),

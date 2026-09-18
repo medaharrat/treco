@@ -1,7 +1,7 @@
 {
   "name": "ai-footprint",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "description": "Treco - a free, open-source, privacy-first browser extension that tracks AI usage and estimates its environmental footprint",
   "license": "MIT",

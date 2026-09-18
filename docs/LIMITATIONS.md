@@ -1,3 +1,7 @@
+---
+title: Limitations — Treco
+---
+
 # Limitations
 
 An honest account of what AI Footprint cannot actually know, and why — assessed against what a browser extension can

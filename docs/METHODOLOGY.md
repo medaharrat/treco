@@ -1,3 +1,7 @@
+---
+title: Environmental Methodology — Treco
+---
+
 # Environmental methodology
 
 This document is the source-of-truth companion to the in-app **Settings → Environmental methodology** page

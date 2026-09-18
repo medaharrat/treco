@@ -1,3 +1,7 @@
+---
+title: Architecture — Treco
+---
+
 # Architecture
 
 ## Design goals
