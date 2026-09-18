@@ -1,4 +1,4 @@
-import { buildUsageEvent, getProviderByDomain, validateUsageEventCandidate } from "@ai-footprint/core";
+import { buildUsageEvent, getProviderByDomain, PROVIDER_REGISTRY, validateUsageEventCandidate } from "@ai-footprint/core";
 import type { Runtime } from "../platform/browserApi.js";
 import { browser } from "../platform/browserApi.js";
 import { WebExtensionStorageAdapter } from "../platform/storage.js";
@@ -70,4 +70,39 @@ browser.runtime.onInstalled.addListener((details) => {
     const dashboardUrl = browser.runtime.getURL("dashboard.html#/onboarding");
     void browser.tabs.create({ url: dashboardUrl });
   }
+
+  if (details.reason === "install" || details.reason === "update") {
+    void reinjectContentScriptIntoOpenTabs();
+  }
 });
+
+/**
+ * Chrome only auto-injects declared content_scripts into pages that load
+ * AFTER the extension becomes active. A tab that was already open before an
+ * install/update never gets the new content script - and any script it had
+ * from before is left running against an invalidated extension context, so
+ * its messages silently never arrive. Without this, usage on already-open
+ * tabs goes untracked until the user manually reloads them.
+ */
+async function reinjectContentScriptIntoOpenTabs(): Promise<void> {
+  if (!browser.scripting) return; // not available in this build target (e.g. older Firefox)
+
+  const domains = PROVIDER_REGISTRY.flatMap((provider) => provider.domains);
+  const urlPatterns = domains.map((domain) => `*://${domain}/*`);
+  if (urlPatterns.length === 0) return;
+
+  const tabs = await browser.tabs.query({ url: urlPatterns });
+  await Promise.all(
+    tabs
+      .filter((tab): tab is typeof tab & { id: number } => typeof tab.id === "number")
+      .map((tab) =>
+        browser.scripting
+          .executeScript({ target: { tabId: tab.id }, files: ["content.js"] })
+          .catch(() => {
+            // Some open tabs (e.g. a provider's login/marketing page outside the
+            // matched app path, or a tab mid-navigation) may reject injection;
+            // that's expected and not worth surfacing to the user.
+          })
+      )
+  );
+}

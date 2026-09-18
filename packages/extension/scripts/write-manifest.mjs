@@ -43,10 +43,13 @@ const base = {
     },
     default_title: "Treco"
   },
-  // Only what's actually used: local storage for usage data/settings. No
-  // "just in case" permissions - e.g. no `alarms`, since nothing schedules
-  // anything, and no `notifications`, since there is no notification feature.
-  permissions: ["storage"],
+  // Only what's actually used: local storage for usage data/settings, and
+  // `scripting` to re-inject the content script into tabs that were already
+  // open before install/update (Chrome does not do this automatically - see
+  // background/index.ts). No "just in case" permissions - e.g. no `alarms`,
+  // since nothing schedules anything, and no `notifications`, since there is
+  // no notification feature.
+  permissions: ["storage", "scripting"],
   host_permissions: hostPermissions,
   // Explicit, not just relying on the MV3 default: no remote code, no inline
   // script execution, nothing but the extension's own bundled scripts.

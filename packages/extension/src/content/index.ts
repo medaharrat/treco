@@ -10,7 +10,18 @@ import { browser } from "../platform/browserApi.js";
  * service worker, which re-validates and re-derives environmental figures
  * itself rather than trusting numbers computed here.
  */
+const INJECTION_MARKER = "__trecoContentScriptLoaded";
+
 async function main() {
+  // Guards against ever running two observers in the same document - most
+  // relevantly, the background worker proactively re-injects this script
+  // into already-open tabs on install/update (see background/index.ts),
+  // since Chrome does not do that automatically for tabs loaded before the
+  // extension became active.
+  const win = window as unknown as Record<string, boolean>;
+  if (win[INJECTION_MARKER]) return;
+  win[INJECTION_MARKER] = true;
+
   const adapter = findAdapterForCurrentPage();
   if (!adapter) return;
 
